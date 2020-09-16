@@ -2,7 +2,7 @@
 ===
 内容简介<br>
 ---
-根据NBA比赛的以往数据预测接下来某场比赛的结果。我们将基于 2018-2019 年的 NBA 常规赛及季后赛的比赛统计数据，预测 2019-2020 常规赛每场赛事的结果。<br>
+根据NBA比赛的以往数据预测接下来某场比赛的结果。我们将基于 2017-2018 年的 NBA 常规赛及季后赛的比赛统计数据，预测 2018-2019 常规赛每场赛事的结果。<br>
 
 ![image](https://github.com/Hualintang/hualintang/blob/master/python/timg.jpeg)
 
@@ -12,18 +12,18 @@
 
 实验流程
 ---
-按照下面的流程实现 NBA 比赛数据分析的任务：<br>1.获取比赛统计数据<br>2.比赛数据分析，得到代表每场比赛每支队伍状态的特征表达<br>3.利用机器学习方法学习每场比赛与胜利队伍的关系，并对 2019-2020 的比赛进行预测
+按照下面的流程实现 NBA 比赛数据分析的任务：<br>1.获取比赛统计数据<br>2.比赛数据分析，得到代表每场比赛每支队伍状态的特征表达<br>3.利用机器学习方法学习每场比赛与胜利队伍的关系，并对 2018-2019 的比赛进行预测
 
 获取NBA比赛数据
 ---
 
 比赛数据介绍
 ---
-在本次实验中，我们将采用 Basketball Reference.com 中的统计数据。在这个网站中，你可以看到不同球员、队伍、赛季和联盟比赛的基本统计数据，如得分、犯规次数、胜负次数等情况。而我们在这里将会使用 2018-2019 NBA Season Summary 中的数据
+在本次实验中，我们将采用 Basketball Reference.com 中的统计数据。在这个网站中，你可以看到不同球员、队伍、赛季和联盟比赛的基本统计数据，如得分、犯规次数、胜负次数等情况。而我们在这里将会使用 2017-2018 NBA Season Summary 中的数据
 
 ![image](https://github.com/Hualintang/hualintang/blob/master/python/bs_re.png)
 
-在这个 2018-2019 总结的所有表格中，我们将使用的是以下三个数据表格：<br>
+在这个 2017-2018 总结的所有表格中，我们将使用的是以下三个数据表格：<br>
 Team Per Game Stats：每支队伍平均每场比赛的表现统计
 
 | 数据名| 含义  |
@@ -88,11 +88,11 @@ Miscellaneous Stats：综合统计数据
 ---
 ![image](https://github.com/Hualintang/hualintang/blob/master/python/bdgls.png)
 
-我们将用这三个表格来评估球队过去的战斗力，另外还需 2018-2019 NBA Schedule and Results 中的 2018~2019 年的 NBA 常规赛及季后赛的每场比赛的比赛数据，用以评估Elo score。在Basketball Reference.com中按照从常规赛至季后赛的时间，列出了 2018 年 10 月份至 2019 年 6 月份的每场比赛的比赛情况。
+我们将用这三个表格来评估球队过去的战斗力，另外还需 2017-2018 NBA Schedule and Results 中的 2017~2018 年的 NBA 常规赛及季后赛的每场比赛的比赛数据，用以评估Elo score。在Basketball Reference.com中按照从常规赛至季后赛的时间，列出了 2017 年 10 月份至 2018 年 6 月份的每场比赛的比赛情况。
 
 ![image](https://github.com/Hualintang/hualintang/blob/master/python/saicheng.png)
 
-可在上图中看到 2018 年 10 月份的部分比赛数据。在每个 Schedule 表格中所包含的数据为
+可在上图中看到 2017 年 10 月份的部分比赛数据。在每个 Schedule 表格中所包含的数据为
 
 |数据名|含义|
 |---|---|
@@ -104,4 +104,17 @@ Miscellaneous Stats：综合统计数据
 |PTS|	主场队伍最后得分|
 |Notes|	备注，表明是否为加时赛等|
 
+在预测时，我们同样也需要在 2018-2019 NBA Schedule and Results 中 2018~2019 年的 NBA 的常规赛比赛安排数据。
 
+获取比赛数据
+---
+
+我们将以获取 Team Per Game Stats 表格数据为例，展示如何获取这三项统计数据：
+
+1.进入到 Basketball Reference.com 中，在导航栏中选择Season并选择2017~2018赛季中的Summary：
+
+![image](https://github.com/Hualintang/hualintang/blob/master/python/lc1.png)
+
+2.进入到 2017~2018 年的Summary界面后，滑动窗口找到Team Per Game Stats表格，并选择左上方的 Share & more，在其下拉菜单中选择 Get table as CSV (for Excel)：
+
+![image](https://github.com/Hualintang/hualintang/blob/master/python/lc2.png)
