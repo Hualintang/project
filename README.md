@@ -118,3 +118,42 @@ Miscellaneous Stats：综合统计数据
 2.进入到 2017~2018 年的Summary界面后，滑动窗口找到Team Per Game Stats表格，并选择左上方的 Share & more，在其下拉菜单中选择 Get table as CSV (for Excel)：
 
 ![image](https://github.com/Hualintang/hualintang/blob/master/python/lc2.png)
+
+3.复制在界面中生成的 csv 格式数据，并粘贴至一个文本编辑器保存为 csv 文件即可：
+
+![image](https://github.com/Hualintang/hualintang/blob/master/python/lc3.png)
+
+数据分析
+---
+
+在获取到数据之后，我们将利用每支队伍过去的比赛情况和 Elo 等级分来判断每支比赛队伍的可胜概率。在评价到每支队伍过去的比赛情况时，将使用到 Team Per Game Stats、Opponent Per Game Stats 和 Miscellaneous Stats（之后简称为 T、O 和 M 表）这三个表格的数据，作为代表比赛中某支队伍的比赛特征。我们的目标是实现针对每场比赛，预测比赛中哪支队伍最终将会获胜，但并不是给出绝对的胜败情况，而是预判胜利的队伍有多大的获胜概率。因此我们将建立一个代表比赛的特征向量。由两支队伍的以往比赛统计情况（T、O 和Ｍ表）和两个队伍各自的 Elo 等级分构成。
+
+在这里我们将基于国际象棋比赛，大致地介绍下 Elo 等级划分制度。在上图中 Eduardo 在窗户上写下的公式就是根据Logistic Distribution计算 PK 双方（A 和 B）对各自的胜率期望值计算公式。假设 A 和 B 的当前等级分为 RAR_ARA和 RBR_BRB，则 A 对 B 的胜率期望值为：
+
+![image](https://github.com/Hualintang/hualintang/blob/master/python/lc4.png)
+
+B 对 A 的胜率期望值为
+
+![image](https://github.com/Hualintang/hualintang/blob/master/python/lc5.png)
+
+如果棋手 A 在比赛中的真实得分 SAS_ASA（胜 1 分，和 0.5 分，负 0 分）和他的胜率期望值 EAE_AEA不同，则他的等级分要根据以下公式进行调整：
+
+![image](https://github.com/Hualintang/hualintang/blob/master/python/lc6.png)
+
+在国际象棋中，根据等级分的不同 K 值也会做相应的调整：
+
+·大于等于2400，K=16<br>
+·2100~2400 分，K=24<br>
+·小于等于2100，K=32<br>
+
+因此我们将会用以表示某场比赛数据的特征向量为（假如 A 与 B 队比赛）：[A 队 Elo score, A 队的 T,O 和 M 表统计数据，B 队 Elo score, B 队的 T,O 和 M 表统计数据]
+
+基于数据进行模型训练和预测
+---
+
+实验前期准备
+---
+
+在本次实验环境中，我们将会使用到 python 的pandas，numpy，scipy和sklearn库，接下来，我们下载相应的数据文件并解压。
+
+
