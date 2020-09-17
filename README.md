@@ -88,6 +88,8 @@ Miscellaneous Stats：综合统计数据
 ---
 ![image](https://github.com/Hualintang/hualintang/blob/master/python/bdgls.png)
 
+美國棒球統計專家比爾˙詹姆斯在80年代初整理美國職業網球聯盟球隊的過去成績時，發現可以用一支球隊的總得分和總失分算出勝率。然後用直角三角型斜線長的平方，等於其他兩邊乘和的“畢達哥拉斯定理”算出了一個公式。就是“勝率＝總得分的平方÷（總得分的平方＋總失分的平方）”，即“畢達哥拉斯乘率”。
+
 我们将用这三个表格来评估球队过去的战斗力，另外还需 2017-2018 NBA Schedule and Results 中的 2017~2018 年的 NBA 常规赛及季后赛的每场比赛的比赛数据，用以评估Elo score。在Basketball Reference.com中按照从常规赛至季后赛的时间，列出了 2017 年 10 月份至 2018 年 6 月份的每场比赛的比赛情况。
 
 ![image](https://github.com/Hualintang/hualintang/blob/master/python/saicheng.png)
@@ -128,7 +130,9 @@ Miscellaneous Stats：综合统计数据
 
 在获取到数据之后，我们将利用每支队伍过去的比赛情况和 Elo 等级分来判断每支比赛队伍的可胜概率。在评价到每支队伍过去的比赛情况时，将使用到 Team Per Game Stats、Opponent Per Game Stats 和 Miscellaneous Stats（之后简称为 T、O 和 M 表）这三个表格的数据，作为代表比赛中某支队伍的比赛特征。我们的目标是实现针对每场比赛，预测比赛中哪支队伍最终将会获胜，但并不是给出绝对的胜败情况，而是预判胜利的队伍有多大的获胜概率。因此我们将建立一个代表比赛的特征向量。由两支队伍的以往比赛统计情况（T、O 和Ｍ表）和两个队伍各自的 Elo 等级分构成。
 
-在这里我们将基于国际象棋比赛，大致地介绍下 Elo 等级划分制度。在上图中 Eduardo 在窗户上写下的公式就是根据Logistic Distribution计算 PK 双方（A 和 B）对各自的胜率期望值计算公式。假设 A 和 B 的当前等级分为 RAR_ARA和 RBR_BRB，则 A 对 B 的胜率期望值为：
+注：ELO等级分制度（英语：Elo rating system）是指由匈牙利裔美国物理学家Arpad Elo创建的一个衡量各类对弈活动水平的评价方法，是当今对弈水平评估的公认的权威方法。被广泛用于国际象棋、围棋、足球、篮球等运动。
+
+假设棋手A和B的当前等级分分别为RA和RB，则按Logistic distribution A对B的胜率期望值当为：
 
 ![image](https://github.com/Hualintang/hualintang/blob/master/python/lc4.png)
 
@@ -136,15 +140,15 @@ B 对 A 的胜率期望值为
 
 ![image](https://github.com/Hualintang/hualintang/blob/master/python/lc5.png)
 
-如果棋手 A 在比赛中的真实得分 SAS_ASA（胜 1 分，和 0.5 分，负 0 分）和他的胜率期望值 EAE_AEA不同，则他的等级分要根据以下公式进行调整：
+假如棋手A在比赛中的真实得分SA（胜=1分，和=0.5分，负=0分）和他的胜率期望值EA不同，需要根据以下公式进行调整：
 
 ![image](https://github.com/Hualintang/hualintang/blob/master/python/lc6.png)
 
 在国际象棋中，根据等级分的不同 K 值也会做相应的调整：
 
-·大于等于2400，K=16<br>
-·2100~2400 分，K=24<br>
-·小于等于2100，K=32<br>
+·评分> 2400: K = 16<br>
+·2100 < 评分 < 2400: k = 24;<br>
+·评分<2100: K = 32<br>
 
 因此我们将会用以表示某场比赛数据的特征向量为（假如 A 与 B 队比赛）：[A 队 Elo score, A 队的 T,O 和 M 表统计数据，B 队 Elo score, B 队的 T,O 和 M 表统计数据]
 
@@ -245,7 +249,7 @@ def calc_elo(win_team, lose_team):
     return new_winner_rank, new_loser_rank
 ```
 
-基于我们初始好的统计数据，及每支队伍的 Elo score 计算结果，建立对应 2015~2016 年常规赛和季后赛中每场比赛的数据集（在主客场比赛时，我们认为主场作战的队伍更加有优势一点，因此会给主场作战队伍相应加上 100 等级分）：
+基于我们初始好的统计数据，及每支队伍的 Elo score 计算结果，建立对应 2017~2018 年常规赛和季后赛中每场比赛的数据集（在主客场比赛时，我们认为主场作战的队伍更加有优势一点，因此会给主场作战队伍相应加上 100 等级分）：
 
 ```
 def  build_dataSet(all_data):
@@ -303,13 +307,13 @@ def  build_dataSet(all_data):
 ```
 if __name__ == '__main__':
 
-    Mstat = pd.read_csv(folder + '/15-16Miscellaneous_Stat.csv')
-    Ostat = pd.read_csv(folder + '/15-16Opponent_Per_Game_Stat.csv')
-    Tstat = pd.read_csv(folder + '/15-16Team_Per_Game_Stat.csv')
+    Mstat = pd.read_csv(folder + '/17-18Miscellaneous_Stat.csv')
+    Ostat = pd.read_csv(folder + '/17-18Opponent_Per_Game_Stat.csv')
+    Tstat = pd.read_csv(folder + '/17-18Team_Per_Game_Stat.csv')
 
     team_stats = initialize_data(Mstat, Ostat, Tstat)
 
-    result_data = pd.read_csv(folder + '/2015-2016_result.csv')
+    result_data = pd.read_csv(folder + '/2017-2018_result.csv')
     X, y = build_dataSet(result_data)
 
     # 训练网络模型
@@ -348,12 +352,12 @@ def predict_winner(team_1, team_2, model):
 在 main 函数中调用该函数，并将预测结果输出到18-19Result.csv文件中：
 
 ```
-# 利用训练好的model在16-17年的比赛中进行预测
+# 利用训练好的model在18-19年的比赛中进行预测
 
 print('Predicting on new schedule..')
-schedule1617 = pd.read_csv(folder + '/16-17Schedule.csv')
+schedule1617 = pd.read_csv(folder + '/18-19Schedule.csv')
 result = []
-for index, row in schedule1617.iterrows():
+for index, row in schedule1819.iterrows():
     team1 = row['Vteam']
     team2 = row['Hteam']
     pred = predict_winner(team1, team2, model)
@@ -367,14 +371,14 @@ for index, row in schedule1617.iterrows():
         loser = team1
         result.append([winner, loser, 1 - prob])
 
-with open('16-17Result.csv', 'w') as f:
+with open('18-19Result.csv', 'w') as f:
     writer = csv.writer(f)
     writer.writerow(['win', 'lose', 'probability'])
     writer.writerows(result)
     print('done.')
 ```
 
-最后，我们实验 Pandas 预览生成预测结果文件16-17Result.csv文件：
+最后，我们实验 Pandas 预览生成预测结果文件18-19Result.csv文件：
 
 ```
 pd.read_csv('18-19Result.csv',header=0)
