@@ -181,8 +181,8 @@ import math
 import csv
 import random
 import numpy as np
-from sklearn import linear_model
-from sklearn.model_selection import cross_val_score
+from sklearn import linear_model#线性回归算法模型
+from sklearn.model_selection import cross_val_score#交叉验证
 ```
 
 设置回归训练时所需用到的参数变量：
