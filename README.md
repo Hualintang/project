@@ -383,3 +383,7 @@ with open('18-19Result.csv', 'w') as f:
 ```
 pd.read_csv('18-19Result.csv',header=0)
 ```
+
+实验总结
+---
+利用`Basketball-reference.com`的部分统计数据，计算每支 NBA 比赛队伍的`Elo socre`，和利用这些基本统计数据评价每支队伍过去的比赛情况，并且根据国际等级划分方法Elo Score对队伍现在的战斗等级进行评分，最终结合这些不同队伍的特征判断在一场比赛中，哪支队伍能够占到优势。
